@@ -1,0 +1,19 @@
+{
+  "rooms": [
+    {
+      "id": "room-1",
+      "name": "Studio A",
+      "location": "Ronneby",
+      "capacity": 5,
+      "price": 300
+    },
+    {
+      "id": "room-2",
+      "name": "Studio B",
+      "location": "Ronneby",
+      "capacity": 8,
+      "price": 400
+    }
+  ],
+  "bookings": []
+}
