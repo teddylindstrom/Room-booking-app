@@ -1,4 +1,5 @@
 import type { Room } from "./types/room";
+import RoomCard from "./components/RoomCard";
 
 const rooms: Room[] = [
   {
@@ -43,15 +44,9 @@ function App() {
       <section>
         <h2>Våra rum</h2>
 
-        {rooms.map((room) => (
-          <article key={room.id}>
-            <h3>{room.name}</h3>
-
-            <p>Plats: {room.location}</p>
-            <p>Antal personer: {room.capacity}</p>
-            <p>Pris: {room.price} kr</p>
-          </article>
-        ))}
+      {rooms.map((room) => (
+      <RoomCard key={room.id} room={room} />
+      ))}
       </section>
 
       <section>
