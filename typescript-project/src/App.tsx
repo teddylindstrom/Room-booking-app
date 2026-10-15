@@ -1,13 +1,13 @@
-import type { Room } from "./types/room";
-import RoomCard from "./components/RoomCard";
 import { useEffect, useState } from "react";
+import type { Room } from "./types/room";
 import { getRooms } from "./api/rooms";
-
-
+import RoomCard from "./components/RoomCard";
+import BookingForm from "./components/BookingForm";
 
 function App() {
   const [rooms, setRooms] = useState<Room[]>([]);
   const [error, setError] = useState("");
+  const [selectedRoom, setSelectedRoom] = useState<Room | null>(null);
 
   useEffect(() => {
     async function loadRooms() {
@@ -38,10 +38,23 @@ function App() {
           <p>Laddar rum...</p>
         )}
 
+        
         {rooms.map((room) => (
-          <RoomCard key={room.id} room={room} />
-        ))}
+        <RoomCard
+        key={room.id}
+        room={room}
+        onBook={() => setSelectedRoom(room)}
+  />
+))}
+
       </section>
+
+      {selectedRoom && (
+  <BookingForm
+    room={selectedRoom}
+    onCancel={() => setSelectedRoom(null)}
+  />
+)}
 
       <section>
         <h2>Mina bokningar</h2>

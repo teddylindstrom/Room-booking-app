@@ -2,5 +2,11 @@
   "dependencies": {
     "json-server": "^1.0.0-beta.15",
     "react-router": "^7.18.4"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "lint": "oxlint",
+    "preview": "vite preview"
   }
 }
