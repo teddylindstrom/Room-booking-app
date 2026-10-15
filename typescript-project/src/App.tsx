@@ -1,39 +1,27 @@
 import type { Room } from "./types/room";
 import RoomCard from "./components/RoomCard";
+import { useEffect, useState } from "react";
+import { getRooms } from "./api/rooms";
 
-const rooms: Room[] = [
-  {
-    id: "room-1",
-    name: "Konferensrum A",
-    location: "Ronneby",
-    capacity: 8,
-    price: 500,
-  },
-  {
-    id: "room-2",
-    name: "Mötesrum B",
-    location: "Karlskrona",
-    capacity: 4,
-    price: 300,
-  },
-  {
-    id: "room-3",
-    name: "Workshoprum C",
-    location: "Karlshamn",
-    capacity: 12,
-    price: 750,
-  },
-    {
-    id: "room-4",
-    name: "Studiorum D",
-    location: "Ronneby",
-    capacity: 6,
-    price: 400,
-  },
-];
 
 
 function App() {
+  const [rooms, setRooms] = useState<Room[]>([]);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    async function loadRooms() {
+      try {
+        const data = await getRooms();
+        setRooms(data);
+      } catch {
+        setError("Kunde inte ladda rummen. Kontrollera API-servern.");
+      }
+    }
+
+    loadRooms();
+  }, []);
+
   return (
     <main>
       <header>
@@ -44,9 +32,15 @@ function App() {
       <section>
         <h2>Våra rum</h2>
 
-      {rooms.map((room) => (
-      <RoomCard key={room.id} room={room} />
-      ))}
+        {error && <p>{error}</p>}
+
+        {!error && rooms.length === 0 && (
+          <p>Laddar rum...</p>
+        )}
+
+        {rooms.map((room) => (
+          <RoomCard key={room.id} room={room} />
+        ))}
       </section>
 
       <section>
