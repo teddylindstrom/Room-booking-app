@@ -24,16 +24,17 @@ function App() {
     loadRooms();
   }, []);
 
-  function handleBooking(booking: NewBooking) {
-    
-    createBooking(booking).catch(async (error) => {
-      console.error("Fel vid bokning:", error);
+async function handleBooking(booking: NewBooking) {
+  try {
+    const savedBooking = await createBooking(booking);
 
-      const savedBooking = await createBooking(booking);
     console.log("Bokningen sparades:", savedBooking);
-    });
-    
+
+    setSelectedRoom(null);
+  } catch (error) {
+    console.error("Kunde inte spara bokningen:", error);
   }
+}
 
   return (
     <main>
