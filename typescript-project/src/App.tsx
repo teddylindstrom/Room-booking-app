@@ -11,6 +11,7 @@ function App() {
   const [error, setError] = useState("");
   const [selectedRoom, setSelectedRoom] = useState<Room | null>(null);
 
+
   useEffect(() => {
     async function loadRooms() {
       try {
@@ -64,10 +65,10 @@ async function handleBooking(booking: NewBooking) {
       </section>
 
       {selectedRoom && (
-  <BookingForm
-    room={selectedRoom}
-    onCancel={() => setSelectedRoom(null)}
-    onBook={handleBooking}
+        <BookingForm
+          room={selectedRoom}
+          onCancel={() => setSelectedRoom(null)}
+          onBook={handleBooking}
   />
 )}
 
