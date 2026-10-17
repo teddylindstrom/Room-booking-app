@@ -17,6 +17,7 @@ function BookingForm({ room, onCancel, onBook }: BookingFormProps) {
   const [error, setError] = useState("");
   const [isSaving, setIsSaving] = useState(false);
 
+  
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setError("");
