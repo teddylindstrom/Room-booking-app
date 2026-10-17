@@ -4,6 +4,7 @@ import { getRooms } from "./api/rooms";
 import RoomCard from "./components/RoomCard";
 import BookingForm from "./components/BookingForm";
 import type { NewBooking } from "./types/booking";
+import { createBooking } from "./api/bookings";
 
 function App() {
   const [rooms, setRooms] = useState<Room[]>([]);
@@ -24,8 +25,15 @@ function App() {
   }, []);
 
   function handleBooking(booking: NewBooking) {
-  console.log("Ny bokning:", booking);
-}
+    
+    createBooking(booking).catch(async (error) => {
+      console.error("Fel vid bokning:", error);
+
+      const savedBooking = await createBooking(booking);
+    console.log("Bokningen sparades:", savedBooking);
+    });
+    
+  }
 
   return (
     <main>
