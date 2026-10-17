@@ -3,6 +3,7 @@ import type { Room } from "./types/room";
 import { getRooms } from "./api/rooms";
 import RoomCard from "./components/RoomCard";
 import BookingForm from "./components/BookingForm";
+import type { NewBooking } from "./types/booking";
 
 function App() {
   const [rooms, setRooms] = useState<Room[]>([]);
@@ -21,6 +22,10 @@ function App() {
 
     loadRooms();
   }, []);
+
+  function handleBooking(booking: NewBooking) {
+  console.log("Ny bokning:", booking);
+}
 
   return (
     <main>
@@ -53,6 +58,7 @@ function App() {
   <BookingForm
     room={selectedRoom}
     onCancel={() => setSelectedRoom(null)}
+    onBook={handleBooking}
   />
 )}
 
