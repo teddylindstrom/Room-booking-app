@@ -22,3 +22,23 @@ export async function createBooking(
 
   return savedBooking;
 }
+
+
+export async function cancelBooking(id: string): Promise<void> {
+  const response = await fetch(
+    `http://localhost:3000/bookings/${id}`,
+    {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        status: "cancelled",
+      }),
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error("Kunde inte avboka bokningen.");
+  }
+}
