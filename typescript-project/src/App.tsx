@@ -40,16 +40,40 @@ function App() {
     loadBookings();
   }, []);
 
-  async function handleBooking(booking: NewBooking) {
-    try {
-      await createBooking(booking);
-      await loadBookings();
-      setSelectedRoom(null);
-    } catch (error) {
-      console.error("Kunde inte spara bokningen:", error);
-      throw error;
+  
+async function handleBooking(booking: NewBooking) {
+  const hasConflict = bookings.some((existingBooking) => {
+    if (
+      existingBooking.roomId !== booking.roomId ||
+      existingBooking.status !== "confirmed"
+    ) {
+      return false;
     }
+
+    const newStart = new Date(booking.startTime).getTime();
+    const newEnd = new Date(booking.endTime).getTime();
+    const existingStart = new Date(existingBooking.startTime).getTime();
+    const existingEnd = new Date(existingBooking.endTime).getTime();
+
+    return newStart < existingEnd && newEnd > existingStart;
+  });
+
+  if (hasConflict) {
+    throw new Error(
+      "Rummet är redan bokat under den valda tiden. Välj en annan tid."
+    );
   }
+
+  try {
+    await createBooking(booking);
+    await loadBookings();
+    setSelectedRoom(null);
+  } catch (error) {
+    console.error("Kunde inte spara bokningen:", error);
+    throw error;
+  }
+}
+
 
   async function handleCancelBooking(id: string): Promise<void> {
     try {
