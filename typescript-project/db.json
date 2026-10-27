@@ -21,7 +21,7 @@
       "customerEmail": "mrteddybare1@gmail.com",
       "startTime": "2026-10-20T18:11",
       "endTime": "2026-10-20T20:00",
-      "status": "confirmed",
+      "status": "cancelled",
       "id": "riuRVTOp2CE"
     },
     {
@@ -45,7 +45,7 @@
       "customerEmail": "mrteddybare1@gmail.com",
       "startTime": "2026-10-28T10:39",
       "endTime": "2026-10-28T11:39",
-      "status": "confirmed",
+      "status": "cancelled",
       "id": "EVmT08wIqqc"
     }
   ],

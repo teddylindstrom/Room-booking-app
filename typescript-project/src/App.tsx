@@ -1,33 +1,33 @@
-import type { Booking, NewBooking } from "./types/booking";
 import { useEffect, useState } from "react";
 import type { Room } from "./types/room";
+import type { Booking, NewBooking } from "./types/booking";
 import { getRooms } from "./api/rooms";
+import { createBooking, getBookings, cancelBooking, } from "./api/bookings";
 import RoomCard from "./components/RoomCard";
 import BookingForm from "./components/BookingForm";
-import { createBooking, getBookings, cancelBooking } from "./api/bookings";
-
 
 function App() {
   const [rooms, setRooms] = useState<Room[]>([]);
-  const [error, setError] = useState("");
-  const [selectedRoom, setSelectedRoom] = useState<Room | null>(null);
   const [bookings, setBookings] = useState<Booking[]>([]);
+  const [selectedRoom, setSelectedRoom] = useState<Room | null>(null);
+  const [error, setError] = useState("");
   const [bookingError, setBookingError] = useState("");
+  const [isLoadingBookings, setIsLoadingBookings] = useState(true);
 
   async function loadBookings() {
-  try {
-    const data = await getBookings();
-
-    setBookings(data);
-    setBookingError("");
-  } catch {
-    setBookingError("Kunde inte ladda bokningarna.");
+    try {
+      const data = await getBookings();
+      setBookings(data);
+      setBookingError("");
+    } catch {
+      setBookingError("Kunde inte ladda bokningarna. Kontrollera API-servern.");
+    } finally {
+      setIsLoadingBookings(false);
+    }
   }
-} 
 
   useEffect(() => {
-    async function 
-    loadRooms() {
+    async function loadRooms() {
       try {
         const data = await getRooms();
         setRooms(data);
@@ -37,30 +37,29 @@ function App() {
     }
 
     loadRooms();
+    loadBookings();
   }, []);
 
-async function handleBooking(booking: NewBooking) {
-  const savedBooking = await createBooking(booking);
-
-  console.log("Bokningen sparades:", savedBooking);
-
-  setBookings((currentBookings) => [...currentBookings, savedBooking]);
-  setSelectedRoom(null);
-}
-
-async function handleCancelBooking(id: string): Promise<void> {
-  try {
-    await cancelBooking(id);
-    setBookings((currentBookings) =>
-      currentBookings.map((booking) =>
-        booking.id === id ? { ...booking, status: "cancelled" } : booking,
-      ),
-    );
-  } catch (error) {
-    console.error("Kunde inte avboka bokningen:", error);
-    setBookingError("Kunde inte avboka bokningen. Försök igen.");
+  async function handleBooking(booking: NewBooking) {
+    try {
+      await createBooking(booking);
+      await loadBookings();
+      setSelectedRoom(null);
+    } catch (error) {
+      console.error("Kunde inte spara bokningen:", error);
+      throw error;
+    }
   }
-}
+
+  async function handleCancelBooking(id: string): Promise<void> {
+    try {
+      await cancelBooking(id);
+      await loadBookings();
+    } catch (error) {
+      console.error("Kunde inte avboka bokningen:", error);
+      setBookingError("Kunde inte avboka bokningen. Försök igen.");
+    }
+  }
 
   return (
     <main>
@@ -72,21 +71,17 @@ async function handleCancelBooking(id: string): Promise<void> {
       <section>
         <h2>Våra rum</h2>
 
-        {error && <p>{error}</p>}
+        {error && <p role="alert">{error}</p>}
 
-        {!error && rooms.length === 0 && (
-          <p>Laddar rum...</p>
-        )}
+        {!error && rooms.length === 0 && <p>Laddar rum...</p>}
 
-        
         {rooms.map((room) => (
-        <RoomCard
-        key={room.id}
-        room={room}
-        onBook={() => setSelectedRoom(room)}
-  />
-))}
-
+          <RoomCard
+            key={room.id}
+            room={room}
+            onBook={() => setSelectedRoom(room)}
+          />
+        ))}
       </section>
 
       {selectedRoom && (
@@ -94,42 +89,46 @@ async function handleCancelBooking(id: string): Promise<void> {
           room={selectedRoom}
           onCancel={() => setSelectedRoom(null)}
           onBook={handleBooking}
-  />
-)}
+        />
+      )}
 
-<section>
-  <h2>Mina bokningar</h2>
+      <section>
+        <h2>Mina bokningar</h2>
 
-  {bookingError && <p role="alert">{bookingError}</p>}
+        {bookingError && <p role="alert">{bookingError}</p>}
 
-  {!bookingError && bookings.length === 0 && (
-    <p>Du har inga bokningar ännu.</p>
-  )}
+        {isLoadingBookings && <p>Laddar bokningar...</p>}
 
-  {bookings.map((booking) => {
-    const room = rooms.find((room) => room.id === booking.roomId);
-
-    return (
-      <article key={booking.id}>
-        <h3>{room ? room.name : "Okänt rum"}</h3>
-
-        <p>E-post: {booking.customerEmail}</p>
-        <p>Starttid: {booking.startTime}</p>
-        <p>Sluttid: {booking.endTime}</p>
-        <p>Status: {booking.status === "confirmed" ? "Bekräftad" : "Avbokad"}</p>
-
-        {booking.status === "confirmed" && (
-          <button
-            type="button"
-            onClick={() => handleCancelBooking(booking.id)}
-          >
-            Avboka
-          </button>
+        {!isLoadingBookings && !bookingError && bookings.length === 0 && (
+          <p>Du har inga bokningar ännu.</p>
         )}
-      </article>
-    );
-  })}
-</section>
+
+        {bookings.map((booking) => {
+          const room = rooms.find((item) => item.id === booking.roomId);
+
+          return (
+            <article key={booking.id}>
+              <h3>{room ? room.name : "Okänt rum"}</h3>
+              <p>E-post: {booking.customerEmail}</p>
+              <p>Starttid: {booking.startTime}</p>
+              <p>Sluttid: {booking.endTime}</p>
+              <p>
+                Status:{" "}
+                {booking.status === "confirmed" ? "Bekräftad" : "Avbokad"}
+              </p>
+
+              {booking.status === "confirmed" && (
+                <button
+                  type="button"
+                  onClick={() => handleCancelBooking(booking.id)}
+                >
+                  Avboka
+                </button>
+              )}
+            </article>
+          );
+        })}
+      </section>
     </main>
   );
 }

@@ -42,3 +42,15 @@ export async function cancelBooking(id: string): Promise<void> {
     throw new Error("Kunde inte avboka bokningen.");
   }
 }
+
+export async function getBookings(): Promise<Booking[]> {
+  const response = await fetch("http://localhost:3000/bookings");
+
+  if (!response.ok) {
+    throw new Error("Kunde inte hämta bokningarna.");
+  }
+
+  const bookings: Booking[] = await response.json();
+
+  return bookings;
+}
