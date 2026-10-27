@@ -23,6 +23,30 @@
       "endTime": "2026-10-20T20:00",
       "status": "confirmed",
       "id": "riuRVTOp2CE"
+    },
+    {
+      "roomId": "room-1",
+      "customerEmail": "mrteddybare1@gmail.com",
+      "startTime": "2026-10-28T10:36",
+      "endTime": "2026-10-28T11:36",
+      "status": "cancelled",
+      "id": "5216QgFO_8M"
+    },
+    {
+      "roomId": "room-2",
+      "customerEmail": "mrteddybare1@gmail.com",
+      "startTime": "2026-10-28T10:38",
+      "endTime": "2026-10-28T11:38",
+      "status": "confirmed",
+      "id": "FG-rs4tt1Zc"
+    },
+    {
+      "roomId": "room-1",
+      "customerEmail": "mrteddybare1@gmail.com",
+      "startTime": "2026-10-28T10:39",
+      "endTime": "2026-10-28T11:39",
+      "status": "confirmed",
+      "id": "EVmT08wIqqc"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"

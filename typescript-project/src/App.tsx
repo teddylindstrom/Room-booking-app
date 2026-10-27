@@ -1,10 +1,11 @@
+import type { Booking, NewBooking } from "./types/booking";
 import { useEffect, useState } from "react";
 import type { Room } from "./types/room";
 import { getRooms } from "./api/rooms";
 import RoomCard from "./components/RoomCard";
 import BookingForm from "./components/BookingForm";
-import { createBooking, cancelBooking } from "./api/bookings";
-import type { Booking, NewBooking } from "./types/booking";
+import { createBooking, getBookings, cancelBooking } from "./api/bookings";
+
 
 function App() {
   const [rooms, setRooms] = useState<Room[]>([]);
@@ -12,6 +13,17 @@ function App() {
   const [selectedRoom, setSelectedRoom] = useState<Room | null>(null);
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [bookingError, setBookingError] = useState("");
+
+  async function loadBookings() {
+  try {
+    const data = await getBookings();
+
+    setBookings(data);
+    setBookingError("");
+  } catch {
+    setBookingError("Kunde inte ladda bokningarna.");
+  }
+} 
 
   useEffect(() => {
     async function 
