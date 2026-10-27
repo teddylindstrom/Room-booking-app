@@ -37,7 +37,7 @@
       "customerEmail": "mrteddybare1@gmail.com",
       "startTime": "2026-10-28T10:38",
       "endTime": "2026-10-28T11:38",
-      "status": "confirmed",
+      "status": "cancelled",
       "id": "FG-rs4tt1Zc"
     },
     {
@@ -47,6 +47,14 @@
       "endTime": "2026-10-28T11:39",
       "status": "cancelled",
       "id": "EVmT08wIqqc"
+    },
+    {
+      "roomId": "room-2",
+      "customerEmail": "mrteddybare1@gmail.com",
+      "startTime": "2026-10-28T10:00",
+      "endTime": "2026-10-28T11:00",
+      "status": "confirmed",
+      "id": "nPoUV-BKXiM"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"
