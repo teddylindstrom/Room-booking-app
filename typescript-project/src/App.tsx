@@ -9,6 +9,7 @@ import BookingForm from "./components/BookingForm";
 function App() {
   const [rooms, setRooms] = useState<Room[]>([]);
   const [bookings, setBookings] = useState<Booking[]>([]);
+  const [emailFilter, setEmailFilter] = useState("");
   const [selectedRoom, setSelectedRoom] = useState<Room | null>(null);
   const [error, setError] = useState("");
   const [bookingError, setBookingError] = useState("");
@@ -84,6 +85,10 @@ async function handleBooking(booking: NewBooking) {
       setBookingError("Kunde inte avboka bokningen. Försök igen.");
     }
   }
+  const filteredBookings = bookings.filter(
+  (booking) =>
+    booking.customerEmail.toLowerCase() === emailFilter.trim().toLowerCase()
+);
 
   return (
     <main>
@@ -117,42 +122,59 @@ async function handleBooking(booking: NewBooking) {
       )}
 
       <section>
-        <h2>Mina bokningar</h2>
+  <h2>Mina bokningar</h2>
 
-        {bookingError && <p role="alert">{bookingError}</p>}
+  <label htmlFor="emailFilter">Filtrera med e-postadress:</label>
+  <input
+    id="emailFilter"
+    type="email"
+    value={emailFilter}
+    onChange={(event) => setEmailFilter(event.target.value)}
+    placeholder="Ange din e-postadress"
+  />
 
-        {isLoadingBookings && <p>Laddar bokningar...</p>}
+  {bookingError && <p role="alert">{bookingError}</p>}
 
-        {!isLoadingBookings && !bookingError && bookings.length === 0 && (
-          <p>Du har inga bokningar ännu.</p>
-        )}
+  {isLoadingBookings && <p>Laddar bokningar...</p>}
 
-        {bookings.map((booking) => {
-          const room = rooms.find((item) => item.id === booking.roomId);
+  {!isLoadingBookings && !bookingError && (
+    <>
+      {!emailFilter.trim() && (
+        <p>Ange din e-postadress för att se dina bokningar.</p>
+      )}
 
-          return (
-            <article key={booking.id}>
-              <h3>{room ? room.name : "Okänt rum"}</h3>
-              <p>E-post: {booking.customerEmail}</p>
-              <p>Starttid: {booking.startTime}</p>
-              <p>Sluttid: {booking.endTime}</p>
-              <p>
-                Status:{" "}
-                {booking.status === "confirmed" ? "Bekräftad" : "Avbokad"}
-              </p>
+      {emailFilter.trim() && filteredBookings.length === 0 && (
+        <p>Inga bokningar hittades för den e-postadressen.</p>
+      )}
 
-              {booking.status === "confirmed" && (
-                <button
-                  type="button"
-                  onClick={() => handleCancelBooking(booking.id)}
-                >
-                  Avboka
-                </button>
-              )}
-            </article>
-          );
-        })}
-      </section>
+      {filteredBookings.map((booking) => {
+        const room = rooms.find((item) => item.id === booking.roomId);
+
+        return (
+          <article key={booking.id}>
+            <h3>{room ? room.name : "Okänt rum"}</h3>
+            <p>E-post: {booking.customerEmail}</p>
+            <p>Starttid: {booking.startTime}</p>
+            <p>Sluttid: {booking.endTime}</p>
+            <p>
+              Status:{" "}
+              {booking.status === "confirmed" ? "Bekräftad" : "Avbokad"}
+            </p>
+
+            {booking.status === "confirmed" && (
+              <button
+                type="button"
+                onClick={() => handleCancelBooking(booking.id)}
+              >
+                Avboka
+              </button>
+            )}
+          </article>
+        );
+      })}
+    </>
+  )}
+</section>
     </main>
   );
 }
