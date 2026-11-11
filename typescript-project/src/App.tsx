@@ -42,7 +42,12 @@ function App() {
 
   
 async function handleBooking(booking: NewBooking) {
-  const hasConflict = bookings.some((existingBooking) => {
+  // Hämta de senaste bokningarna från API:et
+  const latestBookings = await getBookings();
+  setBookings(latestBookings);
+
+  // Kontrollera om rummet redan är bokat under tiden
+  const hasConflict = latestBookings.some((existingBooking) => {
     if (
       existingBooking.roomId !== booking.roomId ||
       existingBooking.status !== "confirmed"
@@ -64,14 +69,9 @@ async function handleBooking(booking: NewBooking) {
     );
   }
 
-  try {
-    await createBooking(booking);
-    await loadBookings();
-    setSelectedRoom(null);
-  } catch (error) {
-    console.error("Kunde inte spara bokningen:", error);
-    throw error;
-  }
+  await createBooking(booking);
+  await loadBookings();
+  setSelectedRoom(null);
 }
 
 
