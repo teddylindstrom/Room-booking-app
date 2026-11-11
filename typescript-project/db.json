@@ -55,6 +55,14 @@
       "endTime": "2026-10-28T11:00",
       "status": "confirmed",
       "id": "nPoUV-BKXiM"
+    },
+    {
+      "roomId": "room-2",
+      "customerEmail": "mrteddybare1@gmail.com",
+      "startTime": "2026-11-12T11:00",
+      "endTime": "2026-11-12T15:00",
+      "status": "confirmed",
+      "id": "3psGL5yse8I"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"

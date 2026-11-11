@@ -38,8 +38,12 @@ function BookingForm({ room, onCancel, onBook }: BookingFormProps) {
     try {
       setIsSaving(true);
       await onBook(booking);
-    } catch {
+    } catch (error) {
+    if (error instanceof Error) {
+      setError(error.message);
+    } else {
       setError("Bokningen kunde inte sparas. Försök igen.");
+  }
     } finally {
       setIsSaving(false);
     }
