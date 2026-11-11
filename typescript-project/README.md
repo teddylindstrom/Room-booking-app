@@ -1,32 +1,121 @@
-# React + TypeScript + Vite
+# Room Booking
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+## Om projektet
 
-Currently, two official plugins are available:
+Room Booking är en webbapplikation utvecklad med React och TypeScript. Applikationen gör det möjligt för användare att se tillgängliga rum, skapa bokningar och avboka befintliga bokningar.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Projektet är utvecklat som en individuell examination och består av en sida utan routing.
 
-## React Compiler
+### Funktioner
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- Visa tillgängliga rum.
+- Skapa bokningar med e-postadress, starttid och sluttid.
+- Visa sparade bokningar.
+- Förhindra dubbelbokningar av samma rum under överlappande tider.
+- Avboka befintliga bokningar.
+- Spara och hämta bokningar via JSON Server.
+- Behålla bokningsinformation efter omladdning av sidan.
 
-## Expanding the Oxlint configuration
+## Tekniker
 
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
+- React
+- TypeScript
+- Vite
+- JSON Server
+- REST API
+- HTML och CSS
 
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+## Projektstruktur
+
+```text
+src/
+├── api/
+│   ├── bookings.ts
+│   └── rooms.ts
+├── components/
+│   ├── BookingForm.tsx
+│   └── RoomCard.tsx
+├── types/
+│   ├── booking.ts
+│   └── room.ts
+└── App.tsx
+
+db.json
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+## Installation
+
+Klona projektet från GitHub och gå till projektmappen.
+
+Installera beroenden:
+
+```bash
+npm install
+```
+
+## Starta applikationen
+
+Applikationen använder två separata processer som behöver köras samtidigt.
+
+### 1. Starta JSON Server
+
+Öppna en terminal och kör:
+
+```bash
+npm run api
+```
+
+JSON Server startar på:
+
+```text
+http://localhost:3000
+```
+
+API-endpoints:
+
+- `http://localhost:3000/rooms`
+- `http://localhost:3000/bookings`
+
+### 2. Starta React-applikationen
+
+Öppna en ny terminal och kör:
+
+```bash
+npm run dev
+```
+
+Öppna därefter adressen som Vite visar, vanligtvis:
+
+```text
+http://localhost:5173
+```
+
+## Bygga projektet
+
+För att kontrollera TypeScript och skapa en produktionsversion kör:
+
+```bash
+npm run build
+```
+
+## Datamodellering
+
+Applikationen använder två relaterade resurstyper:
+
+**Room:** Beskriver de rum som kan bokas.
+
+**Booking:** Beskriver en bokning och innehåller en referens till rummet genom `roomId`, bokarens e-postadress, starttid, sluttid och bokningsstatus.
+
+Bokningsstatus hanteras med en union-typ:
+
+```typescript
+type BookingStatus = "confirmed" | "cancelled";
+```
+
+Nya bokningar använder utility-typen `Omit` för att exkludera id innan bokningen sparas.
+
+## Utvecklare
+
+**Teddy Lindström**
+
+Individuell examination – React och TypeScript.
