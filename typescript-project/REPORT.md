@@ -138,3 +138,22 @@ En av de största utvecklingarna jag märker hos mig själv är hur mycket bätt
 Projektet har gett mig en större förståelse för hur React, TypeScript och API-hantering samverkar i en applikation. Jag har också fått praktisk erfarenhet av att strukturera kod, arbeta med datamodeller och bygga funktionalitet som faktiskt fungerar tillsammans.
 
 Jag har fortfarande en bit kvar innan jag når mitt långsiktiga mål att arbeta som fullstackutvecklare, men efter det här projektet känner jag att jag är på väldigt god väg. Framför allt har jag fått ett större självförtroende i min förmåga att lära mig nya saker, lösa problem och ta mig an tekniska utmaningar på egen hand.
+## 5. Generics och återanvändbar kod (VG)
+
+För att uppfylla VG-kraven har jag använt generics på två ställen i projektet: i API-modulen och i en återanvändbar React-komponent.
+
+### Generisk API-funktion – `request<T>()`
+
+I `src/api/request.ts` har jag skapat en gemensam funktion som hanterar alla fyra API-anrop. Med hjälp av generics kan samma funktion returnera olika typer av data, exempelvis `Room[]`, `Booking[]` eller `Booking`.
+
+Det gör att jag slipper upprepa fetch- och felhanteringslogik i varje funktion. Koden blir mer konsekvent och enklare att underhålla.
+
+### Generisk React-komponent – `List<T>`
+
+I `src/components/List.tsx` har jag skapat en återanvändbar komponent som används för att visa både rum (`Room`) och bokningar (`Booking`).
+
+Komponenten tar emot listan genom `items` och använder `renderItem` för att bestämma hur varje objekt ska visas. På så sätt kan samma komponent hantera olika datatyper utan att förlora TypeScripts typning.
+
+### Reflektion
+
+Genom att använda generics har jag lärt mig att skapa mer flexibel och återanvändbar kod. Jag har kunnat minska upprepningar samtidigt som jag behåller tydlig typning. Det har också gett mig en bättre förståelse för hur generics kan användas både i API-funktioner och React-komponenter.
