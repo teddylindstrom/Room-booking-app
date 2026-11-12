@@ -5,6 +5,7 @@ import { getRooms } from "./api/rooms";
 import { createBooking, getBookings, cancelBooking, } from "./api/bookings";
 import RoomCard from "./components/RoomCard";
 import BookingForm from "./components/BookingForm";
+import List from "./components/List";
 
 function App() {
   const [rooms, setRooms] = useState<Room[]>([]);
@@ -104,13 +105,16 @@ async function handleBooking(booking: NewBooking) {
 
         {!error && rooms.length === 0 && <p>Laddar rum...</p>}
 
-        {rooms.map((room) => (
-          <RoomCard
-            key={room.id}
-            room={room}
-            onBook={() => setSelectedRoom(room)}
-          />
-        ))}
+      <List
+         items={rooms}
+         getKey={(room) => room.id}
+         renderItem={(room) => (
+      <RoomCard
+        room={room}
+        onBook={() => setSelectedRoom(room)}
+    />
+  )}
+/>
       </section>
 
       {selectedRoom && (
@@ -147,31 +151,35 @@ async function handleBooking(booking: NewBooking) {
         <p>Inga bokningar hittades för den e-postadressen.</p>
       )}
 
-      {filteredBookings.map((booking) => {
-        const room = rooms.find((item) => item.id === booking.roomId);
+      <List
+  items={filteredBookings}
+  getKey={(booking) => booking.id}
+  renderItem={(booking) => {
+    const room = rooms.find((item) => item.id === booking.roomId);
 
-        return (
-          <article key={booking.id}>
-            <h3>{room ? room.name : "Okänt rum"}</h3>
-            <p>E-post: {booking.customerEmail}</p>
-            <p>Starttid: {booking.startTime}</p>
-            <p>Sluttid: {booking.endTime}</p>
-            <p>
-              Status:{" "}
-              {booking.status === "confirmed" ? "Bekräftad" : "Avbokad"}
-            </p>
+    return (
+      <article>
+        <h3>{room ? room.name : "Okänt rum"}</h3>
+        <p>E-post: {booking.customerEmail}</p>
+        <p>Starttid: {booking.startTime}</p>
+        <p>Sluttid: {booking.endTime}</p>
+        <p>
+          Status:{" "}
+          {booking.status === "confirmed" ? "Bekräftad" : "Avbokad"}
+        </p>
 
-            {booking.status === "confirmed" && (
-              <button
-                type="button"
-                onClick={() => handleCancelBooking(booking.id)}
-              >
-                Avboka
-              </button>
-            )}
-          </article>
-        );
-      })}
+        {booking.status === "confirmed" && (
+          <button
+            type="button"
+            onClick={() => handleCancelBooking(booking.id)}
+          >
+            Avboka
+          </button>
+        )}
+      </article>
+    );
+  }}
+/>
     </>
   )}
 </section>
