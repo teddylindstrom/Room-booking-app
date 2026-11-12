@@ -1,9 +1,11 @@
 import type { Booking, NewBooking } from "../types/booking";
+import { request } from "./request";
 
+// Skapar en ny bokning genom att göra ett POST-anrop till API:et med bokningsinformationen.
 export async function createBooking(
   booking: NewBooking
 ): Promise<Booking> {
-  const response = await fetch(
+  return request<Booking>(
     "http://localhost:3000/bookings",
     {
       method: "POST",
@@ -13,19 +15,11 @@ export async function createBooking(
       body: JSON.stringify(booking),
     }
   );
-
-  if (!response.ok) {
-    throw new Error("Kunde inte spara bokningen.");
-  }
-
-  const savedBooking: Booking = await response.json();
-
-  return savedBooking;
 }
 
-
+// Uppdaterar statusen för en bokning till "cancelled" genom att göra ett PATCH-anrop till API:et.
 export async function cancelBooking(id: string): Promise<void> {
-  const response = await fetch(
+  return request<void>(
     `http://localhost:3000/bookings/${id}`,
     {
       method: "PATCH",
@@ -37,20 +31,9 @@ export async function cancelBooking(id: string): Promise<void> {
       }),
     }
   );
-
-  if (!response.ok) {
-    throw new Error("Kunde inte avboka bokningen.");
-  }
 }
 
+// Hämtar bokningar från API:et och returnerar dem som en array av Booking-objekt.
 export async function getBookings(): Promise<Booking[]> {
-  const response = await fetch("http://localhost:3000/bookings");
-
-  if (!response.ok) {
-    throw new Error("Kunde inte hämta bokningarna.");
-  }
-
-  const bookings: Booking[] = await response.json();
-
-  return bookings;
+  return request<Booking[]>("http://localhost:3000/bookings");
 }
